@@ -59,3 +59,7 @@ You can go to town on most other logback configurations but the LogDNA only has 
 
 * The HTTP Transport is done by the very lightweight [DavidWebb](https://github.com/hgoebl/DavidWebb) REST Library and so doesn't introduce bulky dependencies
 
+
+## Screenshot of the LogDNA log viewer
+
+![Optional Text](../master/src/test/resources/logdna.png)
