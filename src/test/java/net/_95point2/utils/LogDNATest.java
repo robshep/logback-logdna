@@ -3,6 +3,7 @@ package net._95point2.utils;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 public class LogDNATest 
 {
@@ -15,6 +16,9 @@ public class LogDNATest
 	@Test
 	public void testLogDNALogbackConf() throws InterruptedException
 	{
+		MDC.put("customerId", "C-1");
+		MDC.put("requestId", "cafebabe1");
+		
 	    Logger logger = LoggerFactory.getLogger(LogDNATest.class);
 
 	    logger.info("Okay");
@@ -24,5 +28,7 @@ public class LogDNATest
 	    logger.error("Ah Sh*t!", new RuntimeException("Bang!"));
 	    
 	    logger.info("Well, Bye!");
+	    
+	    Thread.sleep(2000);
 	}
 }

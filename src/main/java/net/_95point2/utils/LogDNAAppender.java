@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +34,7 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 	 */
 	private String appName;
 	private boolean includeStacktrace = true;
+	private boolean sendMDC = true;
 	
 	public LogDNAAppender() {
 		try {
@@ -81,6 +83,17 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 			line.put("app", this.appName);
 			line.put("line", sb.toString());
 			
+			JSONObject meta = new JSONObject();
+			meta.put("logger", ev.getLoggerName());
+			line.put("meta", meta);
+			
+			if(this.sendMDC && !ev.getMDCPropertyMap().isEmpty()){
+				for(Entry<String,String> entry : ev.getMDCPropertyMap().entrySet()){
+					meta.put(entry.getKey(), entry.getValue());
+				}
+			}
+			
+			
 			lines.put(line);
 			
 			HashMap<String,Object> params = new HashMap<>();
@@ -113,6 +126,10 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 
 	public void setIngestKey(String ingestKey) {
 		this.http.setDefaultHeader("apikey", ingestKey);
+	}
+	
+	public void setSendMDC(boolean sendMDC) {
+		this.sendMDC = sendMDC;
 	}
 
 	public void setIncludeStacktrace(boolean includeStacktrace) {

@@ -6,6 +6,8 @@ This small library provides an appender for [logback](https://logback.qos.ch) (a
 
 The appender pushes log entries to LogDNA via HTTPS
 
+Logback's thread-bound storage, the MDC, is sent to LogDNA as metadata to be indexed and then searchable. (See screenshot, and more below) 
+
 ## How To
 
 Logback uses XML file in known locations with the most common being `classpath:/logback.xml`
@@ -67,7 +69,7 @@ and has some sensible options for dealing with buffer management. [Read more her
     <dependency>
       <groupId>net._95point2.utils</groupId>
       <artifactId>logback-logdna</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
     </dependency>
 
 #### Or, plain ol' download
@@ -76,19 +78,35 @@ Or just download the Jar and it's dependencies from https://github.com/robshep/l
 
 ## Configure
 
-You can go to town on most other logback configurations but the LogDNA only has a couple of settings
+You can go to town on most other logback configurations but the LogDNA only has a couple of settings (shown as the default)
     
 * `<appName>LogDNA-Logback-Test</appName>` set this for good log management in LogDNA
 * `<ingestKey>${LOGDNA_INGEST_KEY}</ingestKey>` signup to LogDNA and find this in your account profile
 * `<includeStacktrace>true</includeStacktrace>` this library can send multiline stacktraces (see image) - Raw syslog transport cannot
+* `<sendMDC>true</sendMDC>` copies over logback's Mapped Diagnostic Context [(MDC)](https://logback.qos.ch/manual/mdc.html) as LogDNA Metadata which are then indexed and searchable.
     
 ## More Info
 
 * The log line displays the thread, the logger (class) and the message
-
+* LogDNA's metadata is populated with the logger as an indexable/searchable property.
 * The HTTP Transport is done by the very lightweight [DavidWebb](https://github.com/hgoebl/DavidWebb) REST Library and so doesn't introduce bulky dependencies
 
+## Using the MDC for Meta Data
 
-## Screenshot of the LogDNA log viewer
+The combination of logback's MDC and LogDNA's metadata support is pretty powerful and means you can correlate web-requests, or a userId, or something else that happens in a thread in your application.  
 
-![Optional Text](../master/src/test/resources/logdna.png)
+For example, doing this _anywhere_ in your application...
+
+	MDC.put("customerId", "C-1");
+	MDC.put("requestId", "cafebabe1");
+
+... means that you can then go and search for say, **that** customer in logDNA like this:
+
+	meta.customerId:"C-1"
+
+
+	
+
+## Screenshot of the LogDNA log viewer, including extra metadata
+
+![The Spoils of these toils](../master/src/test/resources/logdna-meta.png)
