@@ -42,7 +42,7 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 		}
 		
 		Webb webb = Webb.create();
-		webb.setBaseUri("http://logs.logdna.com/logs/ingest");
+		webb.setBaseUri("https://logs.logdna.com/logs/ingest");
 		webb.setDefaultHeader(Webb.HDR_USER_AGENT, "LogDNA Appender (95point2)");
 		this.http = webb;
 	}

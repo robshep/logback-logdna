@@ -32,4 +32,11 @@
 	</dependency>
 
   </dependencies>
+  <distributionManagement>
+    <repository>
+	  <id>bintray-robshep-oss</id>
+	  <name>robshep-oss</name>
+	  <url>https://api.bintray.com/maven/robshep/oss/logback-LogDNA/;publish=1</url>
+	</repository>
+  </distributionManagement>
 </project>
