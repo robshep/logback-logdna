@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    
+    <!-- Take both of these LOGDNA appenders -->
+    <!-- this one is a plain old HTTP transport -->
+    <appender name="LOGDNA-HTTP" class="net._95point2.utils.LogDNAAppender">
+		<appName>LogDNA-Logback-Test</appName>
+		<ingestKey>${LOGDNA_INGEST_KEY}</ingestKey>
+		<includeStacktrace>true</includeStacktrace>
+  	</appender>
+  	
+  	<!-- ... and this one should be attached to the root -->
+  	<appender name="LOGDNA" class="ch.qos.logback.classic.AsyncAppender">
+    	<appender-ref ref="LOGDNA-HTTP" />
+  	</appender>
+	 
+	 
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%m%n</pattern>
+			<charset>utf8</charset>
+		</encoder>
+	</appender> 
+	  
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    	<appender-ref ref="LOGDNA" /><!-- the async one -->
+  	</root>
+</configuration>
