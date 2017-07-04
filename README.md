@@ -45,6 +45,35 @@ This is what a logback.xml might look like:
 This setup uses an asynchronous wrapper to deal with log shipping on another thread 
 and has some sensible options for dealing with buffer management. [Read more here](https://logback.qos.ch/manual/appenders.html#AsyncAppender)
 
+## Get it using Maven
+
+1. Add a link to this project's repository in your pom
+
+`project > repositories > `
+
+    <repository>
+        <snapshots>
+            <enabled>false</enabled>
+        </snapshots>
+        <id>bintray-robshep-oss</id>
+        <name>bintray</name>
+        <url>http://dl.bintray.com/robshep/oss</url>
+    </repository>
+
+2. Add the dependency
+
+`project > dependencies > `
+
+    <dependency>
+      <groupId>net._95point2.utils</groupId>
+      <artifactId>logback-logdna</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+
+#### Or, plain ol' download
+
+Or just download the Jar and it's dependencies from https://github.com/robshep/logback-logdna/releases
+
 ## Configure
 
 You can go to town on most other logback configurations but the LogDNA only has a couple of settings
