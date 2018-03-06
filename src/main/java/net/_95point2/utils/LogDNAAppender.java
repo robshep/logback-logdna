@@ -5,7 +5,6 @@ import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map.Entry;
 
 import org.json.JSONArray;
@@ -97,10 +96,6 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 
 
 			lines.put(line);
-
-			HashMap<String,Object> params = new HashMap<>();
-			params.put("hostname", this.hostname);
-			params.put("now", System.currentTimeMillis());
 
 			StringBuilder path = new StringBuilder();
 			path.append("?hostname=").append(encode(this.hostname))
