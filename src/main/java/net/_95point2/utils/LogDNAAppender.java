@@ -141,7 +141,9 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 		this.includeStacktrace = includeStacktrace;
 	}
 
-	public void setTags(Collection<String> tags) { this.tags = encode(joined(tags, ",")); }
+	public void setTags(String tags) {
+		this.tags = encode(tags);
+	}
 
 	private static String encode(String str) {
         try 
@@ -153,16 +155,4 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
             return str;
         }
     }
-
-    private static String joined(Collection<String> strings, String seperator) {
-		StringBuilder sb = new StringBuilder();
-		String currSeperator = "";
-
-		for (String curr : strings) {
-			sb.append(currSeperator).append(curr);
-			currSeperator = seperator;
-		}
-
-		return sb.toString();
-	}
 }

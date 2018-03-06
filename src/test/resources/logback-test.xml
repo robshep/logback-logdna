@@ -7,6 +7,7 @@
 		<appName>LogDNA-Logback-Test</appName>
 		<ingestKey>${LOGDNA_INGEST_KEY}</ingestKey>
 		<includeStacktrace>true</includeStacktrace>
+		<tags>test</tags>
   	</appender>
   	
   	<!-- ... and this one should be attached to the root -->
