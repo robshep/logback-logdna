@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -35,6 +36,7 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 	private String appName;
 	private boolean includeStacktrace = true;
 	private boolean sendMDC = true;
+	private String tags = "";
 	
 	public LogDNAAppender() {
 		try {
@@ -48,7 +50,7 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 		webb.setDefaultHeader(Webb.HDR_USER_AGENT, "LogDNA Appender (95point2)");
 		this.http = webb;
 	}
-	
+
 	@Override
 	protected void append(ILoggingEvent ev) 
 	{
@@ -92,15 +94,23 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 					meta.put(entry.getKey(), entry.getValue());
 				}
 			}
-			
-			
+
+
 			lines.put(line);
-			
+
 			HashMap<String,Object> params = new HashMap<>();
 			params.put("hostname", this.hostname);
 			params.put("now", System.currentTimeMillis());
-			
-			Response<JSONObject> response = http.post("?hostname=" + encode(this.hostname) + "&now=" + encode(String.valueOf(System.currentTimeMillis())) )
+
+			StringBuilder path = new StringBuilder();
+			path.append("?hostname=").append(encode(this.hostname))
+					.append("&now=").append(encode(String.valueOf(System.currentTimeMillis())));
+
+			if (tags != null) {
+				path.append("&tags=").append(tags);
+			}
+
+			Response<JSONObject> response = http.post(path.toString())
 					.body(payload)
 					.retry(3, true)
 					.asJsonObject();
@@ -136,6 +146,8 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 		this.includeStacktrace = includeStacktrace;
 	}
 
+	public void setTags(Collection<String> tags) { this.tags = encode(joined(tags, ",")); }
+
 	private static String encode(String str) {
         try 
         {
@@ -146,4 +158,16 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
             return str;
         }
     }
+
+    private static String joined(Collection<String> strings, String seperator) {
+		StringBuilder sb = new StringBuilder();
+		String currSeperator = "";
+
+		for (String curr : strings) {
+			sb.append(currSeperator).append(curr);
+			currSeperator = seperator;
+		}
+
+		return sb.toString();
+	}
 }
