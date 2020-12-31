@@ -1,3 +1,14 @@
+# NOTICE
+
+As I'm no longer using LogDNA I can't spare the time to maintain this library sorry.
+You are welcome to run your own fork, however there is another similar library that is being maintained.
+https://github.com/zileo-net/logback-logdna
+I haven't used it though.
+
+If somebody else wants to adopt this library, please don't hesiate to ask. 
+
+End of notice. 
+
 # LogDNA Appender for Logback
 
 LogDNA is a hosted logging platform: https://logdna.com
