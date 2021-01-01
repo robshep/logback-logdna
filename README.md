@@ -95,6 +95,7 @@ You can go to town on most other logback configurations but the LogDNA only has 
 * `<ingestKey>${LOGDNA_INGEST_KEY}</ingestKey>` signup to LogDNA and find this in your account profile
 * `<includeStacktrace>true</includeStacktrace>` this library can send multiline stacktraces (see image) - Raw syslog transport cannot
 * `<sendMDC>true</sendMDC>` copies over logback's Mapped Diagnostic Context [(MDC)](https://logback.qos.ch/manual/mdc.html) as LogDNA Metadata which are then indexed and searchable.
+* `<additionalFields><env>PROD</env></additionalFields>` adds fixed additional context as LogDNA Metadata to all logs
     
 ## More Info
 

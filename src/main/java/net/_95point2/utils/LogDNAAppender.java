@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.json.JSONArray;
@@ -35,7 +36,8 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 	private String appName;
 	private boolean includeStacktrace = true;
 	private boolean sendMDC = true;
-	
+	private Map<String, String> additionalFields = new HashMap<>();
+
 	public LogDNAAppender() {
 		try {
 			this.hostname = InetAddress.getLocalHost().getHostName();
@@ -86,7 +88,11 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 			JSONObject meta = new JSONObject();
 			meta.put("logger", ev.getLoggerName());
 			line.put("meta", meta);
-			
+
+			for (Entry<String, String> entry : this.additionalFields.entrySet()) {
+				meta.put(entry.getKey(), entry.getValue());
+			}
+
 			if(this.sendMDC && !ev.getMDCPropertyMap().isEmpty()){
 				for(Entry<String,String> entry : ev.getMDCPropertyMap().entrySet()){
 					meta.put(entry.getKey(), entry.getValue());
@@ -130,6 +136,10 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 	
 	public void setSendMDC(boolean sendMDC) {
 		this.sendMDC = sendMDC;
+	}
+
+	public void setAdditionalFields(Map<String, String> additionalFields) {
+		this.additionalFields = additionalFields;
 	}
 
 	public void setIncludeStacktrace(boolean includeStacktrace) {
