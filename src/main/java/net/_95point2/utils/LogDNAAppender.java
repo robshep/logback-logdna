@@ -49,6 +49,23 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 		this.http = webb;
 	}
 	
+	
+	private void extract(StringBuilder sb, IThrowableProxy tp, boolean causedBy) {
+		sb.append("\n\n");
+		if(causedBy) {
+			sb.append("Caused by :");
+		}
+		sb.append(tp.getClassName()).append(": ").append(tp.getMessage());
+		for(StackTraceElementProxy ste : tp.getStackTraceElementProxyArray()){
+			sb.append("\n\t").append(ste.getSTEAsString());
+		}
+		
+		IThrowableProxy cause = tp.getCause();
+        if (cause != null) {
+            extract(sb, cause, true);
+        }
+	}
+	
 	@Override
 	protected void append(ILoggingEvent ev) 
 	{
@@ -64,11 +81,7 @@ public class LogDNAAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 				.append(ev.getFormattedMessage());
 		
 		if(ev.getThrowableProxy() != null && this.includeStacktrace){
-			IThrowableProxy tp = ev.getThrowableProxy();
-			sb.append("\n\n").append(tp.getClassName()).append(": ").append(tp.getMessage());
-			for(StackTraceElementProxy ste : tp.getStackTraceElementProxyArray()){
-				sb.append("\n\t").append(ste.getSTEAsString());
-			}
+			extract(sb, ev.getThrowableProxy(), false);			
 		}
 		
 		try
